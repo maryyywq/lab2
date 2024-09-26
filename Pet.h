@@ -10,6 +10,7 @@
 #define ENERGY_COST 5
 #define HEALTH_COST 5
 #define SATIETY_COST 10
+#define SLEEP_HUNGER_COST 40
 
 // Определение настроения питомца
 typedef enum Mood {
@@ -153,7 +154,7 @@ char* getWeatherString(Weather weather) {
 void displayPet(Pet* pet) {
     printf("Имя питомца: %s\n", pet->name);
     printf("Возраст питомца: %d\n", pet->age);
-    printf("Голод: %d\n", pet->status.satiety);
+    printf("Сытость: %d\n", pet->status.satiety);
     printf("Энергия: %d\n", pet->status.energy);
     printf("Здоровье: %d\n", pet->status.health);
     printf("Настроение: %s\n", getMoodString(pet->status.mood));
@@ -169,7 +170,10 @@ void initOwner(Owner* owner, char* name, int age, int money) {
 // Кормление питомца
 void feedPet(Pet* pet, Food* food) {
     pet->status.satiety += food->nutritionValue;
-    if (pet->status.satiety > MAX_SATIETY) pet->status.satiety = MAX_SATIETY;
+    if (pet->status.satiety > MAX_SATIETY) {
+        pet->status.satiety = MAX_SATIETY;
+        pet->status.mood = HAPPY;
+    }
     printf("%s съел(а) %s и его(ее) голод уменьшился.\n", pet->name, food->foodName);
 }
 
@@ -180,6 +184,7 @@ void playWithPet(Pet* pet, Game* game) {
         pet->status.energy -= game->energyCost;
         pet->status.satiety -= SATIETY_COST;
         printf("%s поиграл(а) в %s и очень счастлив(а)!\n", pet->name, game->gameName);
+
     }
     else {
         printf("%s слишком устал(а) для игры.\n", pet->name);
@@ -189,7 +194,10 @@ void playWithPet(Pet* pet, Game* game) {
 // Лечение питомца
 void healPet(Pet* pet, Medicine* medicine) {
     pet->status.health += medicine->healingPower;
-    if (pet->status.health > MAX_HEALTH) pet->status.health = MAX_HEALTH;
+    if (pet->status.health > MAX_HEALTH) {
+        pet->status.health = MAX_HEALTH;
+        pet->status.mood = HAPPY;
+    }
     printf("%s принял(а) %s и его(ее) здоровье улучшилось.\n", pet->name, medicine->medicineName);
 }
 
@@ -213,12 +221,18 @@ void walkWithPet(Pet* pet, GameDay* day) {
 // Восстановление энергии питомца
 void sleepPet(Pet* pet, PetHouse* pethouse) {
     pet->status.energy += pethouse->comfortLevel;
+    pet->status.satiety -= SLEEP_HUNGER_COST;
     if (pet->status.energy > MAX_ENERGY)
     {
         pet->status.energy = MAX_ENERGY;
         printf("Ваш питомец %s отлично поспал!\n", pet->name);
     }
-    if (pet->status.energy >= 50)
+    if (pet->status.energy >= 50) {
         printf("Ваш питомец %s хорошо отдохнул!\n", pet->name);
-    else printf("Ваш питомец %s не очень хорошо отдохнул :(\n", pet->name);
+        pet->status.mood = HAPPY;
+    }
+    else {
+        printf("Ваш питомец %s не очень хорошо отдохнул :(\n", pet->name);
+        pet->status.mood = SAD;
+    }
 }
