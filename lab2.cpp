@@ -36,6 +36,7 @@ int main() {
     printf("\n");
     sleepPet(&pet, &pethouse);
     displayPet(&pet);
+    printf("\n");
 
     Pet *pet_2 = (Pet*)(calloc(1, sizeof(Pet)));
     Owner *owner_2 = (Owner*)(calloc(1, sizeof(Owner)));
