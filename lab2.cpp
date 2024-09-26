@@ -7,13 +7,13 @@ int main() {
 
     Pet pet;
     Owner owner;
-    initPet(&pet, "Чешулька", 3);
-    initOwner(&owner, "Марина", 19, 1000);
-    Food food = { "Корм", 30, 10 };
-    Game game = { "Мяч", 40, 10 };
-    Medicine medicine = { "Антибиотик", 20, 15 };
+    initPet(&pet, "Р§РµС€СѓР»СЊРєР°", 3);
+    initOwner(&owner, "РњР°СЂРёРЅР°", 19, 1000);
+    Food food = { "РљРѕСЂРј", 30, 10 };
+    Game game = { "РњСЏС‡", 40, 10 };
+    Medicine medicine = { "РђРЅС‚РёР±РёРѕС‚РёРє", 20, 15 };
     GameDay day = { 1, SUNNY };
-    PetHouse pethouse = { "Теплая постель хозяина", "Ленина, 102", 40 };
+    PetHouse pethouse = { "РўРµРїР»Р°СЏ РїРѕСЃС‚РµР»СЊ С…РѕР·СЏРёРЅР°", "Р›РµРЅРёРЅР°, 102", 40 };
 
     displayPet(&pet);
     printf("\n");

@@ -11,7 +11,7 @@
 #define HEALTH_COST 5
 #define SATIETY_COST 10
 
-// Îïğåäåëåíèå íàñòğîåíèÿ ïèòîìöà
+// ĞĞ¿Ñ€ĞµĞ´ĞµĞ»ĞµĞ½Ğ¸Ğµ Ğ½Ğ°ÑÑ‚Ñ€Ğ¾ĞµĞ½Ğ¸Ñ Ğ¿Ğ¸Ñ‚Ğ¾Ğ¼Ñ†Ğ°
 typedef enum Mood {
     HAPPY,
     ANGRY,
@@ -19,7 +19,7 @@ typedef enum Mood {
     AFRAID
 } Mood;
 
-// Îïğåäåëåíèå ïîãîäû
+// ĞĞ¿Ñ€ĞµĞ´ĞµĞ»ĞµĞ½Ğ¸Ğµ Ğ¿Ğ¾Ğ³Ğ¾Ğ´Ñ‹
 typedef enum Weather {
     SUNNY,
     RAINY,
@@ -27,7 +27,7 @@ typedef enum Weather {
     STORM
 } Weather;
 
-// Ñîñòîÿíèå ïèòîìöà
+// Ğ¡Ğ¾ÑÑ‚Ğ¾ÑĞ½Ğ¸Ğµ Ğ¿Ğ¸Ñ‚Ğ¾Ğ¼Ñ†Ğ°
 typedef struct {
     int satiety;
     int energy;
@@ -35,55 +35,55 @@ typedef struct {
     Mood mood;
 } Status;
 
-// Îïèñàíèå ïèòîìöà
+// ĞĞ¿Ğ¸ÑĞ°Ğ½Ğ¸Ğµ Ğ¿Ğ¸Ñ‚Ğ¾Ğ¼Ñ†Ğ°
 typedef struct {
     char name[MAX_LEN];
     int age;
     Status status;
 } Pet;
 
-// Îïèñàíèå ìåäèêàìåíòîâ
+// ĞĞ¿Ğ¸ÑĞ°Ğ½Ğ¸Ğµ Ğ¼ĞµĞ´Ğ¸ĞºĞ°Ğ¼ĞµĞ½Ñ‚Ğ¾Ğ²
 typedef struct {
     char medicineName[MAX_LEN];
     int healingPower;
     int cost;
 } Medicine;
 
-// Îïèñàíèå ïèùè
+// ĞĞ¿Ğ¸ÑĞ°Ğ½Ğ¸Ğµ Ğ¿Ğ¸Ñ‰Ğ¸
 typedef struct {
     char foodName[MAX_LEN];
     int nutritionValue;
     int cost;
 } Food;
 
-// Îïèñàíèå èãğû
+// ĞĞ¿Ğ¸ÑĞ°Ğ½Ğ¸Ğµ Ğ¸Ğ³Ñ€Ñ‹
 typedef struct {
     char gameName[MAX_LEN];
     int funValue;
     int energyCost;
 } Game;
 
-// Îïèñàíèå õîçÿèíà
+// ĞĞ¿Ğ¸ÑĞ°Ğ½Ğ¸Ğµ Ñ…Ğ¾Ğ·ÑĞ¸Ğ½Ğ°
 typedef struct {
     char ownerName[MAX_LEN];
     int ownerAge;
     int money;
 } Owner;
 
-// Îïèñàíèå äîìà ïèòîìöà
+// ĞĞ¿Ğ¸ÑĞ°Ğ½Ğ¸Ğµ Ğ´Ğ¾Ğ¼Ğ° Ğ¿Ğ¸Ñ‚Ğ¾Ğ¼Ñ†Ğ°
 typedef struct {
     char houseName[MAX_LEN];
     char address[MAX_LEN];
     int comfortLevel;
 } PetHouse;
 
-// Îïèñàíèå èãğîâîãî äíÿ
+// ĞĞ¿Ğ¸ÑĞ°Ğ½Ğ¸Ğµ Ğ¸Ğ³Ñ€Ğ¾Ğ²Ğ¾Ğ³Ğ¾ Ğ´Ğ½Ñ
 typedef struct {
     int dayNumber;
     Weather weather;
 } GameDay;
 
-// Èíèöèàëèçàöèÿ ïèòîìöà
+// Ğ˜Ğ½Ğ¸Ñ†Ğ¸Ğ°Ğ»Ğ¸Ğ·Ğ°Ñ†Ğ¸Ñ Ğ¿Ğ¸Ñ‚Ğ¾Ğ¼Ñ†Ğ°
 void initPet(Pet* pet, char* name, int age) {
     strncpy(pet->name, name, MAX_LEN);
     pet->age = age;
@@ -93,98 +93,98 @@ void initPet(Pet* pet, char* name, int age) {
     pet->status.mood = HAPPY;
 }
 
-// Âûâîä ñòğîêè íàñòğîåíèÿ
+// Ğ’Ñ‹Ğ²Ğ¾Ğ´ ÑÑ‚Ñ€Ğ¾ĞºĞ¸ Ğ½Ğ°ÑÑ‚Ñ€Ğ¾ĞµĞ½Ğ¸Ñ
 char* getMoodString(Mood mood) {
     switch (mood) {
-    case HAPPY: return "ñ÷àñòëèâ(à)";
-    case ANGRY: return "çëèòñÿ";
-    case SAD: return "ãğóñòíûé(àÿ)";
-    case AFRAID: return "áîèòñÿ";
-    default: return "íåéòğàëüíîå íàñòğîåíèå";
+    case HAPPY: return "ÑÑ‡Ğ°ÑÑ‚Ğ»Ğ¸Ğ²(Ğ°)";
+    case ANGRY: return "Ğ·Ğ»Ğ¸Ñ‚ÑÑ";
+    case SAD: return "Ğ³Ñ€ÑƒÑÑ‚Ğ½Ñ‹Ğ¹(Ğ°Ñ)";
+    case AFRAID: return "Ğ±Ğ¾Ğ¸Ñ‚ÑÑ";
+    default: return "Ğ½ĞµĞ¹Ñ‚Ñ€Ğ°Ğ»ÑŒĞ½Ğ¾Ğµ Ğ½Ğ°ÑÑ‚Ñ€Ğ¾ĞµĞ½Ğ¸Ğµ";
     }
 }
 
-// Âûâîä ñòğîêè ïîãîäû
+// Ğ’Ñ‹Ğ²Ğ¾Ğ´ ÑÑ‚Ñ€Ğ¾ĞºĞ¸ Ğ¿Ğ¾Ğ³Ğ¾Ğ´Ñ‹
 char* getWeatherString(Weather weather) {
     switch (weather) {
-    case SUNNY: return "ñîëíå÷íî";
-    case RAINY: return "äîæäëèâî";
-    case WINDY: return "âåòğåííî";
-    case STORM: return "áóğÿ";
-    default: return "íåèçâåñòíàÿ ïîãîäà";
+    case SUNNY: return "ÑĞ¾Ğ»Ğ½ĞµÑ‡Ğ½Ğ¾";
+    case RAINY: return "Ğ´Ğ¾Ğ¶Ğ´Ğ»Ğ¸Ğ²Ğ¾";
+    case WINDY: return "Ğ²ĞµÑ‚Ñ€ĞµĞ½Ğ½Ğ¾";
+    case STORM: return "Ğ±ÑƒÑ€Ñ";
+    default: return "Ğ½ĞµĞ¸Ğ·Ğ²ĞµÑÑ‚Ğ½Ğ°Ñ Ğ¿Ğ¾Ğ³Ğ¾Ğ´Ğ°";
     }
 }
 
-// Îòîáğàæåíèå èíôîğìàöèè î ïèòîìöå
+// ĞÑ‚Ğ¾Ğ±Ñ€Ğ°Ğ¶ĞµĞ½Ğ¸Ğµ Ğ¸Ğ½Ñ„Ğ¾Ñ€Ğ¼Ğ°Ñ†Ğ¸Ğ¸ Ğ¾ Ğ¿Ğ¸Ñ‚Ğ¾Ğ¼Ñ†Ğµ
 void displayPet(Pet* pet) {
-    printf("Èìÿ ïèòîìöà: %s\n", pet->name);
-    printf("Âîçğàñò ïèòîìöà: %d\n", pet->age);
-    printf("Ãîëîä: %d\n", pet->status.satiety);
-    printf("İíåğãèÿ: %d\n", pet->status.energy);
-    printf("Çäîğîâüå: %d\n", pet->status.health);
-    printf("Íàñòğîåíèå: %s\n", getMoodString(pet->status.mood));
+    printf("Ğ˜Ğ¼Ñ Ğ¿Ğ¸Ñ‚Ğ¾Ğ¼Ñ†Ğ°: %s\n", pet->name);
+    printf("Ğ’Ğ¾Ğ·Ñ€Ğ°ÑÑ‚ Ğ¿Ğ¸Ñ‚Ğ¾Ğ¼Ñ†Ğ°: %d\n", pet->age);
+    printf("Ğ“Ğ¾Ğ»Ğ¾Ğ´: %d\n", pet->status.satiety);
+    printf("Ğ­Ğ½ĞµÑ€Ğ³Ğ¸Ñ: %d\n", pet->status.energy);
+    printf("Ğ—Ğ´Ğ¾Ñ€Ğ¾Ğ²ÑŒĞµ: %d\n", pet->status.health);
+    printf("ĞĞ°ÑÑ‚Ñ€Ğ¾ĞµĞ½Ğ¸Ğµ: %s\n", getMoodString(pet->status.mood));
 }
 
-// Èíèöèàëèçàöèÿ õîçÿèíà
+// Ğ˜Ğ½Ğ¸Ñ†Ğ¸Ğ°Ğ»Ğ¸Ğ·Ğ°Ñ†Ğ¸Ñ Ñ…Ğ¾Ğ·ÑĞ¸Ğ½Ğ°
 void initOwner(Owner* owner, char* name, int age, int money) {
     strncpy(owner->ownerName, name, MAX_LEN);
     owner->ownerAge = age;
     owner->money = money;
 }
 
-// Êîğìëåíèå ïèòîìöà
+// ĞšĞ¾Ñ€Ğ¼Ğ»ĞµĞ½Ğ¸Ğµ Ğ¿Ğ¸Ñ‚Ğ¾Ğ¼Ñ†Ğ°
 void feedPet(Pet* pet, Food* food) {
     pet->status.satiety += food->nutritionValue;
     if (pet->status.satiety > MAX_SATIETY) pet->status.satiety = MAX_SATIETY;
-    printf("%s ñúåë(à) %s è åãî(åå) ãîëîä óìåíüøèëñÿ.\n", pet->name, food->foodName);
+    printf("%s ÑÑŠĞµĞ»(Ğ°) %s Ğ¸ ĞµĞ³Ğ¾(ĞµĞµ) Ğ³Ğ¾Ğ»Ğ¾Ğ´ ÑƒĞ¼ĞµĞ½ÑŒÑˆĞ¸Ğ»ÑÑ.\n", pet->name, food->foodName);
 }
 
-// Èãğà ñ ïèòîìöåì
+// Ğ˜Ğ³Ñ€Ğ° Ñ Ğ¿Ğ¸Ñ‚Ğ¾Ğ¼Ñ†ĞµĞ¼
 void playWithPet(Pet* pet, Game* game) {
     if (pet->status.energy >= game->energyCost) {
         pet->status.mood = HAPPY;
         pet->status.energy -= game->energyCost;
         pet->status.satiety -= SATIETY_COST;
-        printf("%s ïîèãğàë(à) â %s è î÷åíü ñ÷àñòëèâ(à)!\n", pet->name, game->gameName);
+        printf("%s Ğ¿Ğ¾Ğ¸Ğ³Ñ€Ğ°Ğ»(Ğ°) Ğ² %s Ğ¸ Ğ¾Ñ‡ĞµĞ½ÑŒ ÑÑ‡Ğ°ÑÑ‚Ğ»Ğ¸Ğ²(Ğ°)!\n", pet->name, game->gameName);
     }
     else {
-        printf("%s ñëèøêîì óñòàë(à) äëÿ èãğû.\n", pet->name);
+        printf("%s ÑĞ»Ğ¸ÑˆĞºĞ¾Ğ¼ ÑƒÑÑ‚Ğ°Ğ»(Ğ°) Ğ´Ğ»Ñ Ğ¸Ğ³Ñ€Ñ‹.\n", pet->name);
     }
 }
 
-// Ëå÷åíèå ïèòîìöà
+// Ğ›ĞµÑ‡ĞµĞ½Ğ¸Ğµ Ğ¿Ğ¸Ñ‚Ğ¾Ğ¼Ñ†Ğ°
 void healPet(Pet* pet, Medicine* medicine) {
     pet->status.health += medicine->healingPower;
     if (pet->status.health > MAX_HEALTH) pet->status.health = MAX_HEALTH;
-    printf("%s ïğèíÿë(à) %s è åãî(åå) çäîğîâüå óëó÷øèëîñü.\n", pet->name, medicine->medicineName);
+    printf("%s Ğ¿Ñ€Ğ¸Ğ½ÑĞ»(Ğ°) %s Ğ¸ ĞµĞ³Ğ¾(ĞµĞµ) Ğ·Ğ´Ğ¾Ñ€Ğ¾Ğ²ÑŒĞµ ÑƒĞ»ÑƒÑ‡ÑˆĞ¸Ğ»Ğ¾ÑÑŒ.\n", pet->name, medicine->medicineName);
 }
 
-// Ïğîãóëêà ñ ïèòîìöåì
+// ĞŸÑ€Ğ¾Ğ³ÑƒĞ»ĞºĞ° Ñ Ğ¿Ğ¸Ñ‚Ğ¾Ğ¼Ñ†ĞµĞ¼
 void walkWithPet(Pet* pet, GameDay* day) {
     if (day->weather == STORM || day->weather == RAINY || day->weather == WINDY) {
         pet->status.mood = AFRAID;
         pet->status.health -= HEALTH_COST;
         if (pet->status.health < 0) pet->status.health = 0;
-        printf("%s èñïóãàëñÿ(àñü), ïîòîìó ÷òî íà óëèöå ïëîõàÿ ïîãîäà.\n", pet->name);
+        printf("%s Ğ¸ÑĞ¿ÑƒĞ³Ğ°Ğ»ÑÑ(Ğ°ÑÑŒ), Ğ¿Ğ¾Ñ‚Ğ¾Ğ¼Ñƒ Ñ‡Ñ‚Ğ¾ Ğ½Ğ° ÑƒĞ»Ğ¸Ñ†Ğµ Ğ¿Ğ»Ğ¾Ñ…Ğ°Ñ Ğ¿Ğ¾Ğ³Ğ¾Ğ´Ğ°.\n", pet->name);
     }
     else {
         pet->status.mood = HAPPY;
-        printf("%s ãóëÿåò è íàñëàæäàåòñÿ õîğîøåé ïîãîäîé.\n", pet->name);
+        printf("%s Ğ³ÑƒĞ»ÑĞµÑ‚ Ğ¸ Ğ½Ğ°ÑĞ»Ğ°Ğ¶Ğ´Ğ°ĞµÑ‚ÑÑ Ñ…Ğ¾Ñ€Ğ¾ÑˆĞµĞ¹ Ğ¿Ğ¾Ğ³Ğ¾Ğ´Ğ¾Ğ¹.\n", pet->name);
     }
     pet->status.energy -= ENERGY_COST;
     pet->status.satiety -= SATIETY_COST;
     if (pet->status.energy < 0) pet->status.energy = 0;
 }
 
-// Âîññòàíîâëåíèå ıíåğãèè ïèòîìöà
+// Ğ’Ğ¾ÑÑÑ‚Ğ°Ğ½Ğ¾Ğ²Ğ»ĞµĞ½Ğ¸Ğµ ÑĞ½ĞµÑ€Ğ³Ğ¸Ğ¸ Ğ¿Ğ¸Ñ‚Ğ¾Ğ¼Ñ†Ğ°
 void sleepPet(Pet* pet, PetHouse pethouse) {
     pet->status.energy += pethouse.comfortLevel;
     if (pet->status.energy > MAX_ENERGY)
     {
         pet->status.energy = MAX_ENERGY;
-        printf("Âàø ïèòîìåö %s îòëè÷íî ïîñïàë!\n", pet->name);
+        printf("Ğ’Ğ°Ñˆ Ğ¿Ğ¸Ñ‚Ğ¾Ğ¼ĞµÑ† %s Ğ¾Ñ‚Ğ»Ğ¸Ñ‡Ğ½Ğ¾ Ğ¿Ğ¾ÑĞ¿Ğ°Ğ»!\n", pet->name);
     }
     if (pet->status.energy >= 50)
-        printf("Âàø ïèòîìåö %s õîğîøî îòäîõíóë!\n", pet->name);
-    else printf("Âàø ïèòîìåö %s íå î÷åíü õîğîøî îòäîõíóë :(\n", pet->name);
+        printf("Ğ’Ğ°Ñˆ Ğ¿Ğ¸Ñ‚Ğ¾Ğ¼ĞµÑ† %s Ñ…Ğ¾Ñ€Ğ¾ÑˆĞ¾ Ğ¾Ñ‚Ğ´Ğ¾Ñ…Ğ½ÑƒĞ»!\n", pet->name);
+    else printf("Ğ’Ğ°Ñˆ Ğ¿Ğ¸Ñ‚Ğ¾Ğ¼ĞµÑ† %s Ğ½Ğµ Ğ¾Ñ‡ĞµĞ½ÑŒ Ñ…Ğ¾Ñ€Ğ¾ÑˆĞ¾ Ğ¾Ñ‚Ğ´Ğ¾Ñ…Ğ½ÑƒĞ» :(\n", pet->name);
 }
