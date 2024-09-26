@@ -1,190 +1,220 @@
 #include <stdio.h>
 #include <string.h>
+#include <Windows.h>
+
 #define MAX_LEN 100
-typedef enum Mood //настроение питомца
-{
+#define MAX_ENERGY 100
+#define MAX_HEALTH 100
+#define MAX_SATIETY 100
+#define MAX_COMFORT 10
+#define ENERGY_COST 5
+#define HEALTH_COST 5
+#define SATIETY_COST 10
+
+// Определение настроения питомца
+typedef enum Mood {
     HAPPY,
     ANGRY,
     SAD,
     AFRAID
-};
+} Mood;
 
-typedef enum Weather //погода
-{
+// Определение погоды
+typedef enum Weather {
     SUNNY,
     RAINY,
     WINDY,
     STORM
-};
+} Weather;
 
-//структура для описания питомца
+// Состояние питомца
 typedef struct {
-    char name[MAX_LEN]; //имя питомца
-    int age; //возраст питомца
-    Status status;
-} Pet;
-
-//структура для описания медикаментозных препаратов для лечения питомца
-typedef struct {
-    char medicineName[MAX_LEN];
-    int healingPower;  // насколько лечение улучшает здоровье питомца
-} Medicine;
-
-
-// Структура для описания пищи
-typedef struct {
-    char foodName[MAX_LEN]; //название еды
-    int nutritionValue; // питательная ценность (увеличивает сытость)
-} Food;
-
-// Структура для описания игры
-typedef struct {
-    char gameName[MAX_LEN]; //название игры
-    int funValue;    // сколько счастья добавляет игра
-    int energyCost;  // сколько энергии отнимает игра
-} Game;
-
-// Структура для описания хозяина питомца
-typedef struct {
-    char ownerName[MAX_LEN]; //имя хозяина питомца
-    int ownerAge; //его возраст
-    int money; //количество денег хозяина
-} Owner;
-
-// Структура для описания дома питомца
-typedef struct {
-    char houseName[MAX_LEN]; // название дома
-    char adress[MAX_LEN]; //адрес дома
-    int comfortLevel; // уровень комфорта (0 - низкий, 10 - высокий)
-} PetHouse;
-
-// Структура для описания игрового дня
-typedef struct {
-    int dayNumber; // номер игрового дня
-    Weather weather; //погода
-} GameDay;
-
-//структура, которая позволяет узнать текущее состояние питомца
-typedef struct {
-    int hunger;
+    int satiety;
     int energy;
     int health;
     Mood mood;
 } Status;
 
+// Описание питомца
+typedef struct {
+    char name[MAX_LEN];
+    int age;
+    Status status;
+} Pet;
+
+// Описание медикаментов
+typedef struct {
+    char medicineName[MAX_LEN];
+    int healingPower;
+    int cost;
+} Medicine;
+
+// Описание пищи
+typedef struct {
+    char foodName[MAX_LEN];
+    int nutritionValue;
+    int cost;
+} Food;
+
+// Описание игры
+typedef struct {
+    char gameName[MAX_LEN];
+    int funValue;
+    int energyCost;
+} Game;
+
+// Описание хозяина
+typedef struct {
+    char ownerName[MAX_LEN];
+    int ownerAge;
+    int money;
+} Owner;
+
+// Описание дома питомца
+typedef struct {
+    char houseName[MAX_LEN];
+    char address[MAX_LEN];
+    int comfortLevel;
+} PetHouse;
+
+// Описание игрового дня
+typedef struct {
+    int dayNumber;
+    Weather weather;
+} GameDay;
+
 // Инициализация питомца
-void initPet(Pet* pet, const char* name, int age) {
+void initPet(Pet* pet, char* name, int age) {
     strncpy(pet->name, name, MAX_LEN);
     pet->age = age;
-    pet->status.hunger = 0;
-    pet->status.energy = 50;
-    pet->status.health = 100;
+    pet->status.satiety = MAX_SATIETY;
+    pet->status.energy = MAX_ENERGY / 2;
+    pet->status.health = MAX_HEALTH;
     pet->status.mood = HAPPY;
 }
 
+// Вывод строки настроения
+char* getMoodString(Mood mood) {
+    switch (mood) {
+    case HAPPY: return "счастлив(а)";
+    case ANGRY: return "злится";
+    case SAD: return "грустный(ая)";
+    case AFRAID: return "боится";
+    default: return "нейтральное настроение";
+    }
+}
+
+// Вывод строки погоды
+char* getWeatherString(Weather weather) {
+    switch (weather) {
+    case SUNNY: return "солнечно";
+    case RAINY: return "дождливо";
+    case WINDY: return "ветренно";
+    case STORM: return "буря";
+    default: return "неизвестная погода";
+    }
+}
+
 // Отображение информации о питомце
-void displayPet(const Pet* pet) {
+void displayPet(Pet* pet) {
     printf("Имя питомца: %s\n", pet->name);
     printf("Возраст питомца: %d\n", pet->age);
-    printf("Голод: %d\n", pet->status.hunger);
+    printf("Голод: %d\n", pet->status.satiety);
     printf("Энергия: %d\n", pet->status.energy);
     printf("Здоровье: %d\n", pet->status.health);
-    printf("Настроение: %d\n", pet->status.mood);
+    printf("Настроение: %s\n", getMoodString(pet->status.mood));
 }
 
 // Инициализация хозяина
-void initOwner(Owner* owner, const char* name, int age, int money) {
+void initOwner(Owner* owner, char* name, int age, int money) {
     strncpy(owner->ownerName, name, MAX_LEN);
     owner->ownerAge = age;
     owner->money = money;
 }
 
-// Инициализация еды
-void initFood(Food* food, const char* foodName, int nutritionValue) {
-    strncpy(food->foodName, foodName, MAX_LEN);
-    food->nutritionValue = nutritionValue;
-}
-
 // Кормление питомца
 void feedPet(Pet* pet, Food* food) {
-    pet->status.hunger -= food->nutritionValue;
-    if (pet->status.hunger < 0) {
-        pet->status.hunger = 0; // Питомец больше не голоден
-    }
-    printf("%s eats %s\n", pet->name, food->foodName);
+    pet->status.satiety += food->nutritionValue;
+    if (pet->status.satiety > MAX_SATIETY) pet->status.satiety = MAX_SATIETY;
+    printf("%s съел(а) %s и его(ее) голод уменьшился.\n", pet->name, food->foodName);
 }
 
-// Инициализация игры
-void initGame(Game* game, const char* gameName, int funValue, int energyCost) {
-    strncpy(game->gameName, gameName, MAX_LEN);
-    game->funValue = funValue;
-    game->energyCost = energyCost;
-}
-
-// Играть с питомцем
+// Игра с питомцем
 void playWithPet(Pet* pet, Game* game) {
     if (pet->status.energy >= game->energyCost) {
         pet->status.mood = HAPPY;
         pet->status.energy -= game->energyCost;
-        printf("%s играет и очень счастлив!\n", pet->name);
+        pet->status.satiety -= SATIETY_COST;
+        printf("%s поиграл(а) в %s и очень счастлив(а)!\n", pet->name, game->gameName);
     }
     else {
-        printf("%s очень устал для игры!", pet->name);
+        printf("%s слишком устал(а) для игры.\n", pet->name);
     }
-}
-
-// Инициализация медикамента
-void initMedicine(Medicine* medicine, const char* name, int healingPower) {
-    strncpy(medicine->medicineName, name, MAX_LEN);
-    medicine->healingPower = healingPower;
 }
 
 // Лечение питомца
 void healPet(Pet* pet, Medicine* medicine) {
     pet->status.health += medicine->healingPower;
-    if (pet->status.health > 100) {
-        pet->status.health = 100; // Здоровье не может превышать 100
-    }
-    printf("%s принял %s и чувствует себя лучше!\n", pet->name, medicine->medicineName);
+    if (pet->status.health > MAX_HEALTH) pet->status.health = MAX_HEALTH;
+    printf("%s принял(а) %s и его(ее) здоровье улучшилось.\n", pet->name, medicine->medicineName);
 }
 
-// Инициализация дома
-void initPetHouse(PetHouse* house, const char* name, const char* address, int comfortLevel) {
-    strncpy(house->houseName, name, MAX_LEN);
-    strncpy(house->adress, address, MAX_LEN);
-    house->comfortLevel = comfortLevel;
-}
-
-// Увеличение комфорта питомца
-void increaseComfort(Pet* pet, PetHouse* house) {
-    if (house->comfortLevel >= 7) {
-        pet->status.mood = HAPPY;
-    }
-    else {
-        pet->status.mood = SAD;
-    }
-}
-
-// Инициализация игрового дня
-void initGameDay(GameDay* day, int dayNumber, Weather weather) {
-    day->dayNumber = dayNumber;
-    day->weather = weather;
-}
-
-// Обработка погоды в течение дня
-void processWeather(Pet* pet, GameDay* day) {
+// Прогулка с питомцем
+void walkWithPet(Pet* pet, GameDay* day) {
     if (day->weather == STORM || day->weather == RAINY || day->weather == WINDY) {
         pet->status.mood = AFRAID;
-		printf("%s очень испуган из-за плохой погоды!\n", pet->name);
+        pet->status.health -= HEALTH_COST;
+        if (pet->status.health < 0) pet->status.health = 0;
+        printf("%s испугался(ась), потому что на улице плохая погода.\n", pet->name);
     }
-    else if (day->weather == SUNNY) {
+    else {
         pet->status.mood = HAPPY;
-        printf("%s наслаждается солнечным днем!\n", pet->name);
+        printf("%s гуляет и наслаждается хорошей погодой.\n", pet->name);
     }
+    pet->status.energy -= ENERGY_COST;
+    pet->status.satiety -= SATIETY_COST;
+    if (pet->status.energy < 0) pet->status.energy = 0;
 }
 
+// Восстановление энергии питомца
+void sleepPet (Pet* pet) {
+    pet->status.energy = MAX_ENERGY;
+    printf("Ваш питомец %s отлично поспал!\n", pet->name);
+}
 
-int main()
-{
+int main() {
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
+
+    Pet pet;
+    Owner owner;
+    initPet(&pet, "Чешулька", 3);
+    initOwner(&owner, "Марина",19, 1000);
+    Food food = { "Корм", 30, 10 };
+    Game game = { "Мяч", 40, 10 };
+    Medicine medicine = { "Антибиотик", 20, 15 };
+    GameDay day = { 1, SUNNY };
+
+    displayPet(&pet);
+    printf("\n");
+    walkWithPet(&pet, &day);
+    displayPet(&pet);
+    printf("\n");
+    playWithPet(&pet, &game);
+    displayPet(&pet);
+    printf("\n");
+    feedPet(&pet, &food);
+    displayPet(&pet);
+    printf("\n");
+    day.weather = RAINY;
+    walkWithPet(&pet, &day);
+    displayPet(&pet);
+    printf("\n");
+    healPet(&pet, &medicine);
+    displayPet(&pet);
+    printf("\n");
+    sleepPet(&pet);
+    displayPet(&pet);
+
     return 0;
 }
