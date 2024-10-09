@@ -4,72 +4,91 @@
 int main() {
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
+    // Создаем владельца
+    Owner owner("Мария", 19, 500);
 
-    Pet pet;
-    Owner owner;
-    initPet(&pet, "Чешулька", 3);
-    initOwner(&owner, "Марина", 19, 1000);
-    Food food = { "Корм", 30, 10 };
-    Game game = { "Мяч", 40, 10 };
-    Medicine medicine = { "Антибиотик", 20, 15 };
-    GameDay day = { 1, SUNNY };
-    PetHouse pethouse = { "Теплая постель хозяина", "Ленина, 102", 40 };
+    // Создаем дом для питомцев
+    PetHouse petHouse("Теплая постель хозяйки", "Ленина, 59", 75);
 
-    printf("Работа со статическими переменными:\n");
-    displayPet(&pet);
-    printf("\n");
-    walkWithPet(&pet, &day);
-    displayPet(&pet);
-    printf("\n");
-    playWithPet(&pet, &game);
-    displayPet(&pet);
-    printf("\n");
-    feedPet(&pet, &food);
-    displayPet(&pet);
-    printf("\n");
-    day.weather = RAINY;
-    walkWithPet(&pet, &day);
-    displayPet(&pet);
-    printf("\n");
-    healPet(&pet, &medicine);
-    displayPet(&pet);
-    printf("\n");
-    sleepPet(&pet, &pethouse);
-    displayPet(&pet);
-    printf("\n");
+    // Создаем питомцев
+    Cat myCat("Чешулька", 3);
+    Dog myDog("Белка", 5);
 
-    Pet *pet_2 = (Pet*)(calloc(1, sizeof(Pet)));
-    Owner *owner_2 = (Owner*)(calloc(1, sizeof(Owner)));
-    initOwner(owner_2, "Александр", 15, 500);
-    initPet(pet_2, "Шарик", 5);
-    Food* food_2 = (Food*)(calloc(1, sizeof(Food)));
-    initFood(food_2, "Педигри", 40, 100);
-    Game* game_2 = (Game*)(calloc(1, sizeof(Game)));
-    initGame(game_2, "Косточка", 20, 10);
-    Medicine* medicine_2 = (Medicine*)(calloc(1, sizeof(Medicine)));
-    initMedicine(medicine_2, "Укол", 30, 50);
-    GameDay* gameday_2 = (GameDay*)(calloc(1, sizeof(GameDay)));
-    initGameDay(gameday_2, 2, RAINY);
-    PetHouse* pethouse_2 = (PetHouse*)(calloc(1, sizeof(PetHouse)));
-    initPetHouse(pethouse_2, "Будка", "Обской бульвар, 144", 29);
+    // Создаем игры для питомцев
+    Game catGame("Мышеловка", 20, 15);
+    Game dogGame("Мячик", 25, 10);
 
-    printf("Работа с динамическими переменными:\n");
-    displayPet(pet_2);
-    printf("\n");
-    walkWithPet(pet_2, gameday_2);
-    displayPet(pet_2);
-    printf("\n");
-    playWithPet(pet_2, game_2);
-    displayPet(pet_2);
-    printf("\n");
-    feedPet(pet_2, food_2);
-    displayPet(pet_2);
-    printf("\n");
-    healPet(pet_2, medicine_2);
-    displayPet(pet_2);
-    printf("\n");
-    sleepPet(pet_2, pethouse_2);
-    displayPet(pet_2);
+    // Создаем еду для питомцев
+    Food catFood("Корм для кошек", 20, 5);
+    Food dogFood("Корм для собак", 30, 8);
+
+    // Создаем медикаменты для питомцев
+    Medicine catMedicine("Витамины для кошек", 15, 10);
+    Medicine dogMedicine("Витамины для собак", 20, 12);
+
+    // Питомцы гуляют
+    std::cout << "Питомцы идут на прогулку:" << std::endl;
+    myCat.walk(SUNNY);
+    myDog.walk(RAINY);
+
+    // Питомцы едят
+    std::cout << "Кормим питомцев:" << std::endl;
+    if (owner.getMoney() >= catFood.getCost()) {
+        myCat.feed(catFood.getNutritionValue());
+        owner.setMoney(owner.getMoney() - catFood.getCost()); // Уменьшаем деньги владельца
+        std::cout << owner.getOwnerName() << " потратил(а) " << catFood.getCost() << " на " << catFood.getFoodName() << "." << std::endl;
+    }
+    else {
+        std::cout << owner.getOwnerName() << " недостаточно денег для покупки " << catFood.getFoodName() << "." << std::endl;
+    }
+
+    if (owner.getMoney() >= dogFood.getCost()) {
+        myDog.feed(dogFood.getNutritionValue());
+        owner.setMoney(owner.getMoney() - dogFood.getCost()); // Уменьшаем деньги владельца
+        std::cout << owner.getOwnerName() << " потратил(а) " << dogFood.getCost() << " на " << dogFood.getFoodName() << "." << std::endl;
+    }
+    else {
+        std::cout << owner.getOwnerName() << " недостаточно денег для покупки " << dogFood.getFoodName() << "." << std::endl;
+    }
+
+    // Питомцы играют
+    std::cout << "Питомцы играют:" << std::endl;
+    myCat.play(catGame.getEnergyCost());
+    myDog.play(dogGame.getEnergyCost());
+
+    // Питомцы спят
+    std::cout << "Питомцы отдыхают:" << std::endl;
+    myCat.sleep(30);
+    myDog.sleep(40);
+
+    // Питомцы лечатся
+    std::cout << "Питомцы принимают лекарства:" << std::endl;
+    if (owner.getMoney() >= catMedicine.getCost()) {
+        myCat.heal(catMedicine.getHealingPower());
+        owner.setMoney(owner.getMoney() - catMedicine.getCost()); // Уменьшаем деньги владельца
+        std::cout << owner.getOwnerName() << " потратил(а) " << catMedicine.getCost() << " на " << catMedicine.getMedicineName() << "." << std::endl;
+    }
+    else {
+        std::cout << owner.getOwnerName() << " недостаточно денег для покупки " << catMedicine.getMedicineName() << "." << std::endl;
+    }
+
+    if (owner.getMoney() >= dogMedicine.getCost()) {
+        myDog.heal(dogMedicine.getHealingPower());
+        owner.setMoney(owner.getMoney() - dogMedicine.getCost()); // Уменьшаем деньги владельца
+        std::cout << owner.getOwnerName() << " потратил(а) " << dogMedicine.getCost() << " на " << dogMedicine.getMedicineName() << "." << std::endl;
+    }
+    else {
+        std::cout << owner.getOwnerName() << " недостаточно денег для покупки " << dogMedicine.getMedicineName() << "." << std::endl;
+    }
+
+    // Выводим информацию о питомцах и о деньгах владельца
+    std::cout << std::endl << "Информация о питомцах:" << std::endl;
+    myCat.display();
+    std::cout << std::endl;
+    myDog.display();
+
+    // Выводим информацию о деньгах хозяина
+    std::cout << std::endl << owner.getOwnerName() << ", у вас осталось " << owner.getMoney() << " денег." << std::endl;
 
     return 0;
 }

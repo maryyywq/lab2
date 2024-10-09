@@ -1,238 +1,330 @@
 #pragma once
-#include <stdio.h>
-#include <string.h>
+#include <iostream>
+#include <string>
 
-#define MAX_LEN 100
-#define MAX_ENERGY 100
-#define MAX_HEALTH 100
-#define MAX_SATIETY 100
-#define MAX_COMFORT 100
-#define ENERGY_COST 5
-#define HEALTH_COST 5
-#define SATIETY_COST 10
-#define SLEEP_HUNGER_COST 40
+const int MAX_ENERGY = 100;
+const int MAX_HEALTH = 100;
+const int MAX_SATIETY = 100;
+const int MAX_COMFORT = 100;
+const int ENERGY_COST = 5;
+const int HEALTH_COST = 5;
+const int SATIETY_COST = 10;
+const int SLEEP_HUNGER_COST = 40;
 
 // Определение настроения питомца
-typedef enum Mood {
+enum Mood {
     HAPPY,
     ANGRY,
     SAD,
     AFRAID
-} Mood;
+};
 
 // Определение погоды
-typedef enum Weather {
+enum Weather {
     SUNNY,
     RAINY,
     WINDY,
     STORM
-} Weather;
+};
 
-// Состояние питомца
-typedef struct {
+// Класс состояния питомца
+class Status {
+private:
     int satiety;
     int energy;
     int health;
     Mood mood;
-} Status;
 
-// Описание питомца
-typedef struct {
-    char name[MAX_LEN];
+public:
+    Status() : satiety(MAX_SATIETY), energy(MAX_ENERGY / 2), health(MAX_HEALTH), mood(HAPPY) {}
+    ~Status() = default; // Деструктор по умолчанию
+
+    // Геттеры
+    int getSatiety() const { return satiety; }
+    int getEnergy() const { return energy; }
+    int getHealth() const { return health; }
+    Mood getMood() const { return mood; }
+
+    // Сеттеры
+    void setSatiety(int s) { satiety = (s > MAX_SATIETY) ? MAX_SATIETY : s; }
+    void setEnergy(int e) { energy = (e > MAX_ENERGY) ? MAX_ENERGY : e; }
+    void setHealth(int h) { health = (h > MAX_HEALTH) ? MAX_HEALTH : h; }
+    void setMood(Mood m) { mood = m; }
+};
+
+// Абстрактный класс питомца
+class Pet {
+protected:
+    std::string name;
     int age;
     Status status;
-} Pet;
 
-// Описание медикаментов
-typedef struct {
-    char medicineName[MAX_LEN];
-    int healingPower;
-    int cost;
-} Medicine;
+public:
+    Pet() : name(""), age(0), status() {}
+    Pet(const std::string& name, int age) : name(name), age(age), status() {}
+    virtual ~Pet() = default; // Виртуальный деструктор по умолчанию
 
-// Описание пищи
-typedef struct {
-    char foodName[MAX_LEN];
+    // Геттеры
+    std::string getName() const { return name; }
+    int getAge() const { return age; }
+    Status getStatus() const { return status; }
+
+    // Сеттеры
+    void setName(const std::string& n) { name = n; }
+    void setAge(int a) { age = a; }
+    void setStatus(const Status& s) { status = s; }
+
+    virtual void makeSound() const = 0; // Чисто виртуальная функция
+    void display() const {
+        std::cout << "Имя питомца: " << name << std::endl;
+        std::cout << "Возраст питомца: " << age << std::endl;
+        std::cout << "Сытость: " << status.getSatiety() << std::endl;
+        std::cout << "Энергия: " << status.getEnergy() << std::endl;
+        std::cout << "Здоровье: " << status.getHealth() << std::endl;
+        std::cout << "Настроение: " << getMoodString(status.getMood()) << std::endl;
+    }
+
+    void feed(int nutritionValue) {
+        int newSatiety = status.getSatiety() + nutritionValue;
+        status.setSatiety(newSatiety);
+        if (status.getSatiety() == MAX_SATIETY) {
+            status.setMood(HAPPY);
+        }
+        std::cout << name << " покушал(а) и его(ее) голод уменьшился.\n";
+        makeSound(); // Питомец издает звук после еды
+    }
+
+    void play(int energyCost) {
+        if (status.getEnergy() >= energyCost) {
+            status.setMood(HAPPY);
+            status.setEnergy(status.getEnergy() - energyCost);
+            status.setSatiety(status.getSatiety() - SATIETY_COST);
+            std::cout << name << " поиграл(а) и очень счастлив(а)!\n";
+            makeSound(); // Питомец издает звук после игры
+        }
+        else {
+            std::cout << name << " слишком устал(а) для игры.\n";
+        }
+    }
+
+    void heal(int healingPower) {
+        status.setHealth(status.getHealth() + healingPower);
+        if (status.getHealth() > MAX_HEALTH) {
+            status.setHealth(MAX_HEALTH);
+            status.setMood(HAPPY);
+        }
+        std::cout << name << " принял(а) лекарства и его(ее) здоровье улучшилось.\n";
+    }
+
+    void walk(Weather weather) {
+        if (weather == STORM || weather == RAINY || weather == WINDY) {
+            status.setMood(AFRAID);
+            status.setHealth(status.getHealth() - HEALTH_COST);
+            if (status.getHealth() < 0) status.setHealth(0);
+            std::cout << name << " испугался(ась) из-за плохой погоды.\n";
+        }
+        else {
+            status.setMood(HAPPY);
+            std::cout << name << " гуляет и наслаждается хорошей погодой.\n";
+        }
+        status.setEnergy(status.getEnergy() - ENERGY_COST);
+        status.setSatiety(status.getSatiety() - SATIETY_COST);
+        if (status.getEnergy() < 0) status.setEnergy(0);
+
+        makeSound(); // Питомец издает звук после прогулки
+    }
+
+    void sleep(int comfortLevel) {
+        status.setEnergy(status.getEnergy() + comfortLevel);
+        status.setSatiety(status.getSatiety() - SLEEP_HUNGER_COST);
+        if (status.getEnergy() > MAX_ENERGY) {
+            status.setEnergy(MAX_ENERGY);
+        }
+
+        if (status.getEnergy() >= 50) {
+            std::cout << name << " хорошо отдохнул!\n";
+            status.setMood(HAPPY);
+        }
+        else {
+            std::cout << name << " не очень хорошо отдохнул :(\n";
+            status.setMood(SAD);
+        }
+        makeSound(); // Питомец издает звук после сна
+    }
+
+private:
+    std::string getMoodString(Mood mood) const {
+        switch (mood) {
+        case HAPPY: return "счастлив(а)";
+        case ANGRY: return "злится";
+        case SAD: return "грустный(ая)";
+        case AFRAID: return "боится";
+        default: return "нейтральное настроение";
+        }
+    }
+};
+
+// Класс кошки
+class Cat : public Pet {
+public:
+    Cat() : Pet() {}
+    Cat(const std::string& name, int age) : Pet(name, age) {}
+    ~Cat() = default; // Деструктор по умолчанию
+
+    void makeSound() const override {
+        std::cout << name << " говорит: Мяу!" << std::endl;
+    }
+};
+
+// Класс собаки
+class Dog : public Pet {
+public:
+    Dog() : Pet() {}
+    Dog(const std::string& name, int age) : Pet(name, age) {}
+    ~Dog() = default; // Деструктор по умолчанию
+
+    void makeSound() const override {
+        std::cout << name << " говорит: Гав!" << std::endl;
+    }
+};
+
+// Класс еды
+class Food {
+private:
+    std::string foodName;
     int nutritionValue;
     int cost;
-} Food;
 
-// Описание игры
-typedef struct {
-    char gameName[MAX_LEN];
+public:
+    Food() : foodName(""), nutritionValue(0), cost(0) {}
+    Food(const std::string& foodName, int nutritionValue, int cost)
+        : foodName(foodName), nutritionValue(nutritionValue), cost(cost) {}
+    ~Food() = default; // Деструктор по умолчанию
+
+    // Геттеры
+    std::string getFoodName() const { return foodName; }
+    int getNutritionValue() const { return nutritionValue; }
+    int getCost() const { return cost; }
+
+    // Сеттеры
+    void setFoodName(const std::string& fn) { foodName = fn; }
+    void setNutritionValue(int nv) { nutritionValue = nv; }
+    void setCost(int c) { cost = c; }
+};
+
+// Класс лекарства
+class Medicine {
+private:
+    std::string medicineName;
+    int healingPower;
+    int cost;
+
+public:
+    Medicine() : medicineName(""), healingPower(0), cost(0) {}
+    Medicine(const std::string& medicineName, int healingPower, int cost)
+        : medicineName(medicineName), healingPower(healingPower), cost(cost) {}
+    ~Medicine() = default; // Деструктор по умолчанию
+
+    // Геттеры
+    std::string getMedicineName() const { return medicineName; }
+    int getHealingPower() const { return healingPower; }
+    int getCost() const { return cost; }
+
+    // Сеттеры
+    void setMedicineName(const std::string& mn) { medicineName = mn; }
+    void setHealingPower(int hp) { healingPower = hp; }
+    void setCost(int c) { cost = c; }
+};
+
+// Класс игры
+class Game {
+private:
+    std::string gameName;
     int funValue;
     int energyCost;
-} Game;
 
-// Описание хозяина
-typedef struct {
-    char ownerName[MAX_LEN];
+public:
+    Game() : gameName(""), funValue(0), energyCost(0) {}
+    Game(const std::string& gameName, int funValue, int energyCost)
+        : gameName(gameName), funValue(funValue), energyCost(energyCost) {}
+    ~Game() = default; // Деструктор по умолчанию
+
+    // Геттеры
+    std::string getGameName() const { return gameName; }
+    int getFunValue() const { return funValue; }
+    int getEnergyCost() const { return energyCost; }
+
+    // Сеттеры
+    void setGameName(const std::string& gn) { gameName = gn; }
+    void setFunValue(int fv) { funValue = fv; }
+    void setEnergyCost(int ec) { energyCost = ec; }
+};
+
+// Класс хозяина
+class Owner {
+private:
+    std::string ownerName;
     int ownerAge;
     int money;
-} Owner;
 
-// Описание дома питомца
-typedef struct {
-    char houseName[MAX_LEN];
-    char address[MAX_LEN];
+public:
+    Owner() : ownerName(""), ownerAge(0), money(0) {}
+    Owner(const std::string& ownerName, int ownerAge, int money)
+        : ownerName(ownerName), ownerAge(ownerAge), money(money) {}
+    ~Owner() = default; // Деструктор по умолчанию
+
+    // Геттеры
+    std::string getOwnerName() const { return ownerName; }
+    int getOwnerAge() const { return ownerAge; }
+    int getMoney() const { return money; }
+
+    // Сеттеры
+    void setOwnerName(const std::string& on) { ownerName = on; }
+    void setOwnerAge(int oa) { ownerAge = oa; }
+    void setMoney(int m) { money = m; }
+};
+
+// Класс дома питомца
+class PetHouse {
+private:
+    std::string houseName;
+    std::string address;
     int comfortLevel;
-} PetHouse;
 
-// Описание игрового дня
-typedef struct {
+public:
+    PetHouse() : houseName(""), address(""), comfortLevel(0) {}
+    PetHouse(const std::string& houseName, const std::string& address, int comfortLevel)
+        : houseName(houseName), address(address), comfortLevel(comfortLevel) {}
+    ~PetHouse() = default; // Деструктор по умолчанию
+
+    // Геттеры
+    std::string getHouseName() const { return houseName; }
+    std::string getAddress() const { return address; }
+    int getComfortLevel() const { return comfortLevel; }
+
+    // Сеттеры
+    void setHouseName(const std::string& hn) { houseName = hn; }
+    void setAddress(const std::string& a) { address = a; }
+    void setComfortLevel(int cl) { comfortLevel = cl; }
+};
+
+// Класс игрового дня
+class GameDay {
+private:
     int dayNumber;
     Weather weather;
-} GameDay;
 
-// Инициализация питомца
-void initPet(Pet* pet, char* name, int age) {
-    strncpy(pet->name, name, MAX_LEN);
-    pet->age = age;
-    pet->status.satiety = MAX_SATIETY;
-    pet->status.energy = MAX_ENERGY / 2;
-    pet->status.health = MAX_HEALTH;
-    pet->status.mood = HAPPY;
-}
+public:
+    GameDay() : dayNumber(0), weather(SUNNY) {}
+    GameDay(int dayNumber, Weather weather)
+        : dayNumber(dayNumber), weather(weather) {}
+    ~GameDay() = default; // Деструктор по умолчанию
 
-//Инициализация еды питомца
-void initFood(Food* food, char* foodName,int nutritionValue,int cost) {
-    strncpy(food->foodName, foodName, MAX_LEN);
-    food->nutritionValue = nutritionValue;
-    food->cost = cost;
-}
+    // Геттеры
+    int getDayNumber() const { return dayNumber; }
+    Weather getWeather() const { return weather; }
 
-//Инициализация медикаментов
-void initMedicine(Medicine* medicine, char* medicineName, int healingPower, int cost) {
-    strncpy(medicine->medicineName, medicineName, MAX_LEN);
-    medicine->healingPower = healingPower;
-    medicine->cost = cost;
-}
-
-//Инициализация дома питомца
-void initPetHouse(PetHouse* pethouse, char* houseName, char* address, int comfortLevel){
-    strncpy(pethouse->houseName, houseName, MAX_LEN);
-    strncpy(pethouse->address, address, MAX_LEN);
-    pethouse->comfortLevel = comfortLevel;
-}
-
-//Инициализация игрового дня
-void initGameDay(GameDay* gameday, int dayNumber, Weather weather){
-    gameday->dayNumber = dayNumber;
-    gameday->weather = weather;
-}
-
-//Инициализация игры
-void initGame(Game* game, char* gameName, int funValue, int energyCost) {
-    strncpy(game->gameName, gameName, MAX_LEN);
-    game->funValue = funValue;
-    game->energyCost = energyCost;
-}
-
-// Вывод строки настроения
-char* getMoodString(Mood mood) {
-    switch (mood) {
-    case HAPPY: return "счастлив(а)";
-    case ANGRY: return "злится";
-    case SAD: return "грустный(ая)";
-    case AFRAID: return "боится";
-    default: return "нейтральное настроение";
-    }
-}
-
-// Вывод строки погоды
-char* getWeatherString(Weather weather) {
-    switch (weather) {
-    case SUNNY: return "солнечно";
-    case RAINY: return "дождливо";
-    case WINDY: return "ветренно";
-    case STORM: return "буря";
-    default: return "неизвестная погода";
-    }
-}
-
-// Отображение информации о питомце
-void displayPet(Pet* pet) {
-    printf("Имя питомца: %s\n", pet->name);
-    printf("Возраст питомца: %d\n", pet->age);
-    printf("Сытость: %d\n", pet->status.satiety);
-    printf("Энергия: %d\n", pet->status.energy);
-    printf("Здоровье: %d\n", pet->status.health);
-    printf("Настроение: %s\n", getMoodString(pet->status.mood));
-}
-
-// Инициализация хозяина
-void initOwner(Owner* owner, char* name, int age, int money) {
-    strncpy(owner->ownerName, name, MAX_LEN);
-    owner->ownerAge = age;
-    owner->money = money;
-}
-
-// Кормление питомца
-void feedPet(Pet* pet, Food* food) {
-    pet->status.satiety += food->nutritionValue;
-    if (pet->status.satiety > MAX_SATIETY) {
-        pet->status.satiety = MAX_SATIETY;
-        pet->status.mood = HAPPY;
-    }
-    printf("%s съел(а) %s и его(ее) голод уменьшился.\n", pet->name, food->foodName);
-}
-
-// Игра с питомцем
-void playWithPet(Pet* pet, Game* game) {
-    if (pet->status.energy >= game->energyCost) {
-        pet->status.mood = HAPPY;
-        pet->status.energy -= game->energyCost;
-        pet->status.satiety -= SATIETY_COST;
-        printf("%s поиграл(а) в %s и очень счастлив(а)!\n", pet->name, game->gameName);
-
-    }
-    else {
-        printf("%s слишком устал(а) для игры.\n", pet->name);
-    }
-}
-
-// Лечение питомца
-void healPet(Pet* pet, Medicine* medicine) {
-    pet->status.health += medicine->healingPower;
-    if (pet->status.health > MAX_HEALTH) {
-        pet->status.health = MAX_HEALTH;
-        pet->status.mood = HAPPY;
-    }
-    printf("%s принял(а) %s и его(ее) здоровье улучшилось.\n", pet->name, medicine->medicineName);
-}
-
-// Прогулка с питомцем
-void walkWithPet(Pet* pet, GameDay* day) {
-    if (day->weather == STORM || day->weather == RAINY || day->weather == WINDY) {
-        pet->status.mood = AFRAID;
-        pet->status.health -= HEALTH_COST;
-        if (pet->status.health < 0) pet->status.health = 0;
-        printf("%s испугался(ась), потому что на улице плохая погода.\n", pet->name);
-    }
-    else {
-        pet->status.mood = HAPPY;
-        printf("%s гуляет и наслаждается хорошей погодой.\n", pet->name);
-    }
-    pet->status.energy -= ENERGY_COST;
-    pet->status.satiety -= SATIETY_COST;
-    if (pet->status.energy < 0) pet->status.energy = 0;
-}
-
-// Восстановление энергии питомца
-void sleepPet(Pet* pet, PetHouse* pethouse) {
-    pet->status.energy += pethouse->comfortLevel;
-    pet->status.satiety -= SLEEP_HUNGER_COST;
-    if (pet->status.energy > MAX_ENERGY)
-    {
-        pet->status.energy = MAX_ENERGY;
-        printf("Ваш питомец %s отлично поспал!\n", pet->name);
-    }
-    if (pet->status.energy >= 50) {
-        printf("Ваш питомец %s хорошо отдохнул!\n", pet->name);
-        pet->status.mood = HAPPY;
-    }
-    else {
-        printf("Ваш питомец %s не очень хорошо отдохнул :(\n", pet->name);
-        pet->status.mood = SAD;
-    }
-}
+    // Сеттеры
+    void setDayNumber(int dn) { dayNumber = dn; }
+    void setWeather(Weather w) { weather = w; }
+};
