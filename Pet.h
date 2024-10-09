@@ -92,6 +92,7 @@ public:
         }
         std::cout << name << " покушал(а) и его(ее) голод уменьшилс€.\n";
         makeSound(); // ѕитомец издает звук после еды
+        std::cout << std::endl;
     }
 
     void play(int energyCost) {
@@ -105,6 +106,7 @@ public:
         else {
             std::cout << name << " слишком устал(а) дл€ игры.\n";
         }
+        std::cout << std::endl;
     }
 
     void heal(int healingPower) {
@@ -114,6 +116,7 @@ public:
             status.setMood(HAPPY);
         }
         std::cout << name << " прин€л(а) лекарства и его(ее) здоровье улучшилось.\n";
+        std::cout << std::endl;
     }
 
     void walk(Weather weather) {
@@ -132,6 +135,7 @@ public:
         if (status.getEnergy() < 0) status.setEnergy(0);
 
         makeSound(); // ѕитомец издает звук после прогулки
+        std::cout << std::endl;
     }
 
     void sleep(int comfortLevel) {
@@ -150,6 +154,7 @@ public:
             status.setMood(SAD);
         }
         makeSound(); // ѕитомец издает звук после сна
+        std::cout << std::endl;
     }
 
 private:
