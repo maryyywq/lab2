@@ -1,5 +1,5 @@
-#include "Pet.h"
 #include <Windows.h>
+#include "Pet.h"
 
 int main() {
     SetConsoleCP(1251);
@@ -23,72 +23,37 @@ int main() {
     Food dogFood("Корм для собак", 30, 8);
 
     // Создаем медикаменты для питомцев
-    Medicine catMedicine("Витамины для кошек", 15, 10);
-    Medicine dogMedicine("Витамины для собак", 20, 12);
+    Medicine medicine("Витаминки", 15, 10);
 
-    // Питомцы гуляют
+    //Питомцы гуляют
     std::cout << "Питомцы идут на прогулку:" << std::endl;
     myCat.walk(SUNNY);
     myDog.walk(RAINY);
 
-    // Питомцы едят
-    std::cout << "Кормим питомцев:" << std::endl;
-    if (owner.getMoney() >= catFood.getCost()) {
-        myCat.feed(catFood.getNutritionValue());
-        owner.setMoney(owner.getMoney() - catFood.getCost()); // Уменьшаем деньги владельца
-        std::cout << owner.getOwnerName() << " потратил(а) " << catFood.getCost() << " на " << catFood.getFoodName() << "." << std::endl;
-    }
-    else {
-        std::cout << owner.getOwnerName() << " недостаточно денег для покупки " << catFood.getFoodName() << "." << std::endl;
-    }
+    //Питомцы едят
+    std::cout << std::endl << "Питомцы едят:" << std::endl;
+    myCat.use(&catFood);
+    myDog.use(&dogFood);
 
-    if (owner.getMoney() >= dogFood.getCost()) {
-        myDog.feed(dogFood.getNutritionValue());
-        owner.setMoney(owner.getMoney() - dogFood.getCost()); // Уменьшаем деньги владельца
-        std::cout << owner.getOwnerName() << " потратил(а) " << dogFood.getCost() << " на " << dogFood.getFoodName() << "." << std::endl;
-    }
-    else {
-        std::cout << owner.getOwnerName() << " недостаточно денег для покупки " << dogFood.getFoodName() << "." << std::endl;
-    }
+    //Питомцы играют
+    std::cout << std::endl << "Питомцы играют:" << std::endl;
+    myCat.play(catGame);
+    myDog.play(dogGame);
 
-    // Питомцы играют
-    std::cout << "Питомцы играют:" << std::endl;
-    myCat.play(catGame.getEnergyCost());
-    myDog.play(dogGame.getEnergyCost());
+    //Питомцы спят
+    std::cout << std::endl << "Питомцы отдыхают:" << std::endl;
+    myCat.sleep(petHouse);
+    myDog.sleep(petHouse);
 
-    // Питомцы спят
-    std::cout << "Питомцы отдыхают:" << std::endl;
-    myCat.sleep(30);
-    myDog.sleep(40);
+    //Питомцы лечатся
+    std::cout << std::endl << "Питомцы принимают лекарства:" << std::endl;
+    myCat.use(&medicine);
+    myDog.use(&medicine);
 
-    // Питомцы лечатся
-    std::cout << "Питомцы принимают лекарства:" << std::endl;
-    if (owner.getMoney() >= catMedicine.getCost()) {
-        myCat.heal(catMedicine.getHealingPower());
-        owner.setMoney(owner.getMoney() - catMedicine.getCost()); // Уменьшаем деньги владельца
-        std::cout << owner.getOwnerName() << " потратил(а) " << catMedicine.getCost() << " на " << catMedicine.getMedicineName() << "." << std::endl;
-    }
-    else {
-        std::cout << owner.getOwnerName() << " недостаточно денег для покупки " << catMedicine.getMedicineName() << "." << std::endl;
-    }
-
-    if (owner.getMoney() >= dogMedicine.getCost()) {
-        myDog.heal(dogMedicine.getHealingPower());
-        owner.setMoney(owner.getMoney() - dogMedicine.getCost()); // Уменьшаем деньги владельца
-        std::cout << owner.getOwnerName() << " потратил(а) " << dogMedicine.getCost() << " на " << dogMedicine.getMedicineName() << "." << std::endl;
-    }
-    else {
-        std::cout << owner.getOwnerName() << " недостаточно денег для покупки " << dogMedicine.getMedicineName() << "." << std::endl;
-    }
-
-    // Выводим информацию о питомцах и о деньгах владельца
+    // Выводим информацию о питомцах
     std::cout << std::endl << "Информация о питомцах:" << std::endl;
-    myCat.display();
-    std::cout << std::endl;
-    myDog.display();
-
-    // Выводим информацию о деньгах хозяина
-    std::cout << std::endl << owner.getOwnerName() << ", у вас осталось " << owner.getMoney() << " денег." << std::endl;
+    std::cout << myCat;
+    std::cout << myDog;
 
     return 0;
 }

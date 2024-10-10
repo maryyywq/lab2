@@ -124,7 +124,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Food.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GameDay.h" />
+    <ClInclude Include="Medicine.h" />
+    <ClInclude Include="Mood.h" />
+    <ClInclude Include="Owner.h" />
     <ClInclude Include="Pet.h" />
+    <ClInclude Include="PetHouse.h" />
+    <ClInclude Include="PetItem.h" />
+    <ClInclude Include="Status.h" />
+    <ClInclude Include="Weather.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lab2.cpp" />
